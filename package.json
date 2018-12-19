@@ -1,0 +1,26 @@
+{
+  "name": "physics11simulation",
+  "version": "1.0.0",
+  "description": "Physics Simulation for Mr. Salavati.",
+  "main": "index.js",
+  "scripts": {
+    "make": "browserify app.js > bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firetto/Physics11Simulation.git"
+  },
+  "keywords": [
+    "npm"
+  ],
+  "author": "Anatoly Zavyalov <azs.zavyalov@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/firetto/Physics11Simulation/issues"
+  },
+  "homepage": "https://github.com/firetto/Physics11Simulation#readme",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "pixi.js": "^4.8.4"
+  }
+}
