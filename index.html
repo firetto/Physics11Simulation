@@ -15,6 +15,24 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        <div id="game-wrapper">
+            <div id="game-overlay">
+                <div id="game-overlay-wrapper">
+                    <div id="velocity-slider-wrapper">
+                        <p class="outlined">Projectile Velocity</p>
+                        <input type="range" min="5" max="25" value="10" id="velocity-slider">
+                    </div>
+                    <div id="angle-wrapper">
+                        <p class="outlined">Cannon Angle</p>
+                        <input type="number" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
+                    </div>
+                    <div id="fire-button-wrapper">
+                        <button id="fire-button">FIRE!</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
         <script src="bundle.js" async defer></script>
     </body>
 </html>

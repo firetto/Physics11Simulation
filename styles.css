@@ -4,3 +4,41 @@ body {
     margin: 0;
     width: 100vw;
 }
+#game-overlay {
+    position: absolute;
+}
+#game-overlay-wrapper {
+    margin: 0;
+    position: absolute;
+    height: 30vh;
+    width: 30vw;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 2em;
+}
+#velocity-slider-wrapper {
+    position:relative;
+    left: 2vw;  
+}
+#angle-wrapper {
+    position:relative;
+    left: 2vw;
+}
+#angle-input {
+    width: 3vw;
+}
+#fire-button-wrapper {
+    position:relative;
+    top: 2vh;
+    left: 2vw;
+}
+#fire-button {
+    width: 80%;
+    height: 4vw;
+    border-radius: 1em;
+    border-color: rgba(0,0,0,0.5); 
+    font-size: 150%;
+}
+#fire-button:active {
+    background-color: rgb(128,128,128);
+    color: white;
+}

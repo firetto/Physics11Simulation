@@ -1,15 +1,33 @@
 var PIXI = require('pixi.js');
+var declarations = require('./declarations.js');
+var application = declarations.application;
+var object = require('./object.js');
+var cannon = require('./cannon.js');
 
-var application = new PIXI.Application( {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    backgroundColor: 0x1099bb,
-    antialias: true,
-});
 window.addEventListener("resize", function(event) { 
     application.renderer.resize(window.innerWidth, window.innerHeight); 
 });
-document.body.appendChild(application.view);
-setInterval(function() {
+document.getElementById('game-wrapper').appendChild(application.view);
 
-}, 1000/60);
+var cann = new cannon.Cannon();
+document.getElementById('fire-button').onclick = function() {
+    cann.fire();
+};
+cann.setAngle(-45);
+document.getElementById('velocity-slider').oninput = function() {
+    cann.setVelocity(this.value);
+}
+document.getElementById('angle-input').oninput = function() {
+    cann.setAngle(-this.value);
+}
+setInterval(function() {
+    cann.draw();
+    for (var i = 0; i < object.objects.length; i++) {
+        object.objects[i].update();
+        object.objects[i].draw();
+        if (object.objects[i].onGround) {
+            application.stage.removeChild(object.objects[i].graphics);
+            object.objects.splice(i, 1);
+        }
+    }
+}, 1000/declarations.framerate);
