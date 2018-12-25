@@ -1,64 +1,43 @@
-var declarations = require('./declarations.js');
-var application = declarations.application;
 var PIXI = require('pixi.js');
-exports.Object = class {
-    constructor(mass, pos, velocity) {
-        this.mass = mass;
-        this.graphics = new PIXI.Graphics();
-        this.x = pos.x;
-        this.y = pos.y;
-        this.onGround = false;
-        this.force = {
-            gravity: 0,
-            friction: {
-                x: 0,
-                y: 0
-            },
-            normal: {
-                x: 0,
-                y: 0
-            },
-        }
-        this.gpe = 0;
-        this.ke = {
-            x: 0,
-            y: 0,
-        };
-        this.te = 0;
+var p2 = require('p2');
+var declarations = require('./declarations.js');
+exports.Object = class extends p2.Body {
+    constructor(_rad, _mass, _position, _velocity) {
         
-        this.velocity = {
-            x: velocity.x,
-            y: velocity.y
-        }
-        this.radius = 20;
-        application.stage.addChild(this.graphics);
-    }
-    update() {
-        this.gpe = this.mass*declarations.gravity*(application.renderer.height-this.y);
-        this.ke.y = this.mass * Math.pow(this.velocity.y,2) / 2;
-        this.te = this.gpe + this.ke.y;
-        console.log(this.velocity.y);
-        this.velocity.y += declarations.gravity;
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
-
-        if (this.y + this.radius >= application.renderer.height) {
-            this.velocity.y = 0;
-            this.y = application.renderer.height - this.radius;
-            this.velocity.x = 0;
-            this.onGround = true;
-        }
+        super({
+            mass: _mass,
+            position: [_position.x, _position.y],
+        });
+        this.radius = _rad;
+        
+        this.addShape(new p2.Circle({
+            radius: _rad, 
+            material: declarations.surface_ball
+        }));
+        /*this.addShape(new p2.Box({
+            width: _rad*2,
+            height: _rad*2,
+            material: declarations.surface_ball
+        }))*/
+        declarations.world.addBody(this);
+        this.graphics = new PIXI.Graphics();
+        declarations.application.stage.addChild(this.graphics);
+        this.damping = 0.1;
+        this.shapes[0].material = declarations.surface_ball;
+        this.velocity = [_velocity.x, _velocity.y];
     }
     draw() {
+        this.graphics.clear();
         this.graphics.lineStyle(2,0x000000, 1);
         this.graphics.beginFill(0xa9a9a9);
         this.graphics.drawCircle(this.radius, this.radius, this.radius);
-
+        //this.graphics.drawRect(0,0,this.radius*2, this.radius*2);
+        
         this.graphics.pivot.x = this.radius;
         this.graphics.pivot.y = this.radius;
-        this.graphics.x = this.x;
-        this.graphics.y = this.y;
+        this.graphics.x = this.position[0];
+        this.graphics.y = this.position[1];
+        this.graphics.rotation = this.angle;
     }
 }
-var objects = []; 
-exports.objects = objects;
+exports.objects = [];

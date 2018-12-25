@@ -1,8 +1,12 @@
 var PIXI = require('pixi.js');
-exports.frictionCoefficient = 0.5;
-exports.gravity = 9.80665;
+var p2 = require('p2');
+const PIXELS_PER_METER = 50;
+exports.PIXELS_PER_METER = PIXELS_PER_METER;
+exports.world = new p2.World({
+    gravity:[0,-9.81*PIXELS_PER_METER]
+});
 
-exports.framerate = 1000;
+exports.framerate = 60;
 
 var application = new PIXI.Application( {
     width: window.innerWidth,
@@ -11,3 +15,11 @@ var application = new PIXI.Application( {
     antialias: true,
 });
 exports.application = application;
+
+
+exports.projectile_mass = 5;
+exports.projectile_radius = 25;
+exports.projectile_velocity = 8;
+
+exports.surface_ball = new p2.Material();
+exports.surface_ground = new p2.Material();

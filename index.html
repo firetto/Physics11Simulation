@@ -18,18 +18,29 @@
         <div id="game-wrapper">
             <div id="game-overlay">
                 <div id="game-overlay-wrapper">
-                    <div id="velocity-slider-wrapper">
-                        <p class="outlined">Projectile Velocity</p>
-                        <input type="range" min="5" max="25" value="10" id="velocity-slider">
+                    <div class="game-hud-column">
+                        <div id="velocity-wrapper" class="game-hud-element">
+                            <p class="outlined">Projectile Velocity</p>
+                            <input type="number" min="5" max="20" value="10" id="velocity-input">
+                        </div>
+                        <div id="angle-wrapper" class="game-hud-element">
+                            <p class="outlined">Cannon Angle</p>
+                            <input type="number" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
+                        </div>
+                        <div id="fire-button-wrapper" class="game-hud-element">
+                            <button id="fire-button">FIRE!</button>
+                        </div>
                     </div>
-                    <div id="angle-wrapper">
-                        <p class="outlined">Cannon Angle</p>
-                        <input type="number" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
+                    <div class="game-hud-column" style="position:relative; left: 5vw;">
+                        <div id="height-wrapper" class="game-hud-element">
+                            <p class="outlined">Cannon Height</p>
+                            <input type="range" min="0" max="10" value="0" id="height-input">
+                        </div>
                     </div>
-                    <div id="fire-button-wrapper">
-                        <button id="fire-button">FIRE!</button>
-                    </div>
-                    
+
+                </div>
+                <div id="last-projectile-distance-wrapper">
+                    <p id="last-projectile-distance"></p>
                 </div>
             </div>
         </div>

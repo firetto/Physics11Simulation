@@ -21,6 +21,7 @@
   "homepage": "https://github.com/firetto/Physics11Simulation#readme",
   "dependencies": {
     "browserify": "^16.2.3",
+    "p2": "^0.7.1",
     "pixi.js": "^4.8.4"
   }
 }

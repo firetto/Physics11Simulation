@@ -9,13 +9,14 @@ exports.Cannon = class {
         application.stage.addChild(this.graphics);
         this.angle = 0;
         this.height = 0;
-        this.velocity = declarations.projectile_velocity;
+        this.velocity = 10;
         this.barrelThickness = 40;
         this.barrelLength = 200;
         this.graphics.x = 20;
-        this.setHeight(0);
+        this.graphics.y = 5;
     }
     draw() {
+        this.graphics.clear();
         this.graphics.lineStyle(3, 0x000000, 1);
         this.graphics.beginFill(0x303030);
         this.graphics.drawRoundedRect(0,0, this.barrelLength, this.barrelThickness, 3);
@@ -29,10 +30,10 @@ exports.Cannon = class {
             y: this.graphics.y + this.barrelLength*Math.sin(this.angle)
         }
         let velocity = {
-            x: this.velocity*declarations.PIXELS_PER_METER*Math.cos(this.angle),
-            y: this.velocity*declarations.PIXELS_PER_METER*Math.sin(this.angle)
+            x: this.velocity*Math.cos(this.angle),
+            y: this.velocity*Math.sin(this.angle)
         }
-        object.objects.push(new object.Object(declarations.projectile_radius, declarations.projectile_radius, pos, velocity));
+        object.objects.push(new object.Object(2, pos, velocity));
         
     }
     setAngle(deg) {
@@ -40,9 +41,5 @@ exports.Cannon = class {
     }
     setVelocity(vel) {
         this.velocity = vel;
-    }
-    setHeight(height) {
-        this.height = height*declarations.PIXELS_PER_METER;
-        this.graphics.y = this.height;
     }
 }
