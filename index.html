@@ -23,9 +23,9 @@
                             <p class="outlined">Projectile Velocity</p>
                             <input type="number" min="5" max="20" value="10" id="velocity-input">
                         </div>
-                        <div id="angle-wrapper" class="game-hud-element">
-                            <p class="outlined">Cannon Angle</p>
-                            <input type="number" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
+                        <div id="radius-wrapper" class="game-hud-element">
+                            <p class="outlined">Projectile Radius</p>
+                            <input type="range" min="0.1" max="1" step="0.05" value="0.25" id="radius-input">
                         </div>
                         <div id="fire-button-wrapper" class="game-hud-element">
                             <button id="fire-button">FIRE!</button>
@@ -34,7 +34,11 @@
                     <div class="game-hud-column" style="position:relative; left: 5vw;">
                         <div id="height-wrapper" class="game-hud-element">
                             <p class="outlined">Cannon Height</p>
-                            <input type="range" min="0" max="10" value="0" id="height-input">
+                            <input type="range" min="0" max="10" value="0" step="0.05" id="height-input">
+                        </div>
+                        <div id="angle-wrapper" class="game-hud-element">
+                            <p class="outlined">Cannon Angle</p>
+                            <input type="number" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
                         </div>
                     </div>
 

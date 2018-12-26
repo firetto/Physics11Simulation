@@ -25,6 +25,7 @@ exports.Object = class extends p2.Body {
         this.damping = 0.1;
         this.shapes[0].material = declarations.surface_ball;
         this.velocity = [_velocity.x, _velocity.y];
+        this.touched = false;
     }
     draw() {
         this.graphics.clear();

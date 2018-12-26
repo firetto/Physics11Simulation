@@ -18,8 +18,11 @@ exports.application = application;
 
 
 exports.projectile_mass = 5;
-exports.projectile_radius = 25;
+exports.projectile_radius = PIXELS_PER_METER / 3;
 exports.projectile_velocity = 8;
 
 exports.surface_ball = new p2.Material();
 exports.surface_ground = new p2.Material();
+exports.draggingCannon = false;
+exports.rotatingCannon = false;
+exports.cannonDragPos = [0,0];
