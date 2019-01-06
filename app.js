@@ -36,6 +36,7 @@ var object = require('./object.js');
 var p2 = require('p2');
 var declarations = require('./declarations.js');
 var cannon = require('./cannon.js');
+var levels = require('./levels.js');
 var application = declarations.application;
 var world = declarations.world;
 var draggingCannon = declarations.draggingCannon;
@@ -51,10 +52,7 @@ document.getElementById('fire-button').onclick = function() {
 };
 cann.setAngle(45);
 document.getElementById('velocity-input').oninput = function() {
-    if (this.value > this.max) this.value = this.max;
-    else if (this.value < this.min) this.value = this.min;
     cann.setVelocity(this.value);
-    
 }
 document.getElementById('angle-input').oninput = function() {
     cann.setAngle(this.value);
@@ -65,43 +63,32 @@ document.getElementById('height-input').oninput = function() {
 document.getElementById('radius-input').oninput = function() {
     declarations.projectile_radius = this.value * declarations.PIXELS_PER_METER;
 }
+document.getElementById("length-input").oninput = function() {
+    cann.setLength(this.value);
+}
 
-function cannonDrag_mouseDown() {
-    var mousepos = application.renderer.plugins.interaction.mouse.global;
-    if (mousepos.x >= cann.graphics.x && mousepos.x <= cann.graphics.x + cann.barrelLength*Math.cos(cann.angle)) {
-        if (mousepos.x <= (cann.graphics.x + cann.barrelLength*Math.cos(cann.angle)) / 2) {
-            console.log("dab");
-            if (!draggingCannon) declarations.cannonDragPos = mousepos;
-            draggingCannon = true;
-            
-        }
-        else declarations.rotatingCannon = true;
-    }
+document.getElementById("projectile-type-input").oninput = function() {
+    declarations.projectileType = this.value;
 }
-function cannonDrag_mouseUp() {
-    var mousepos = application.renderer.plugins.interaction.mouse.global;
-    if (mousepos.x >= cann.graphics.x && mousepos.x <= cann.graphics.x + cann.barrelLength*Math.cos(cann.angle)) {
-        declarations.draggingCannon = false;
-        declarations.rotatingCannon = false;
-        console.log("No");
-    }
+document.getElementById("clear-button").onclick = function() {
+    reset();
 }
-function cannonDrag_mouseDrag() {
-    if (declarations.draggingCannon) {
-        let mousePos = application.renderer.plugins.interaction.mouse.global;
-        let height = mousePos.y - declarations.cannonDragPos.y;
-        console.log(height);
-        cann.setHeight(height);
-    }
+document.getElementById("level-input").oninput = function() {
+    declarations.current_level = parseInt(this.value, 10);
+    reset();
 }
-window.addEventListener("mousedown", cannonDrag_mouseDown);
-window.addEventListener("mouseup", cannonDrag_mouseUp);
-window.addEventListener("mousemove", cannonDrag_mouseDrag); 
-
+function reset() {
+    for (var i = 0; i < object.objects.length; i++) {
+        application.stage.removeChild(object.objects[i].graphics);
+        world.removeBody(object.objects[i]);
+    }
+    object.objects.splice(0,object.objects.length);
+    levels.loadLevels();
+}
 var groundShape = new p2.Plane({
     material: declarations.surface_ground
 });
-var wallShape = new p2.Plane();
+var wallShape = new p2.Plane({material:declarations.surface_ground});
 var groundBody = new p2.Body({
     mass:0,
     position: [0, 0],
@@ -118,29 +105,45 @@ var leftWallBody = new p2.Body({
 });
 wallBody.addShape(wallShape);
 groundBody.addShape(groundShape);
-leftWallBody.addShape(new p2.Plane());
+leftWallBody.addShape(new p2.Plane({material:declarations.surface_ground}));
 world.addBody(groundBody);
-world.addBody(wallBody);
+//world.addBody(wallBody);
 world.addBody(leftWallBody);
 application.stage.scale.y = -1;
 application.stage.position.y = application.renderer.height;
-world.addContactMaterial(new p2.ContactMaterial(declarations.surface_ball, declarations.surface_ground, {
-    restitution: 0.2,
-    friction: 0.7
+world.addContactMaterial(new p2.ContactMaterial(declarations.surface_proj, declarations.surface_ground, {
+    restitution: 0.3,
+    friction: 1.5
 }));
+world.addContactMaterial(new p2.ContactMaterial(declarations.surface_proj, declarations.surface_proj, {
+    friction: 10
+}));
+
+document.getElementById("bounce-input").oninput = function() {
+    world.contactMaterials[0].restitution = this.value;
+    console.log(world.contactMaterials[0].restitution);
+}
 
 window.addEventListener("resize", function(event) { 
     application.renderer.resize(window.innerWidth, window.innerHeight); 
     wallBody.position[0] = application.renderer.width;
 }); 
-
+var startTime = Date.now();
+var endTime, timeDiff;
+var timeStep = 1/60, maxSubSteps = 10, lastTime;
+levels.loadLevels();
 application.ticker.add(function() {
-    world.step(1 / 60); 
+    delta = Date.now() - startTime;
+    startTime = Date.now();
+    //var dt = t !== undefined && lastTime !== undefined ? t / 1000 - lastTime : 0;
+    world.step(timeStep, delta/1000, maxSubSteps);
+   // lastTime = t / 1000;
     for (var i = 0; i < object.objects.length; i++) {
         object.objects[i].draw();
         if (i != object.objects.length-1) object.objects[i].world.on('beginContact', function(){});
     }
     if (object.objects.length > 0) {
+        document.getElementById("clear-button").style.display="block";
         object.objects[object.objects.length - 1].world.on('beginContact', function () {
             if (!object.objects[object.objects.length - 1].touched) {
                 lastPosition = object.objects[object.objects.length - 1].position;
@@ -149,6 +152,9 @@ application.ticker.add(function() {
                 object.objects[object.objects.length - 1].touched = true;
             }
         });
+    }
+    else {
+        document.getElementById("clear-button").style.display="none";
     }
     cann.draw();
 });

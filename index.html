@@ -21,14 +21,21 @@
                     <div class="game-hud-column">
                         <div id="velocity-wrapper" class="game-hud-element">
                             <p class="outlined">Projectile Velocity</p>
-                            <input type="number" min="5" max="20" value="10" id="velocity-input">
+                            <input type="range" min="5" max="20" value="10" step="0.25" id="velocity-input">
                         </div>
                         <div id="radius-wrapper" class="game-hud-element">
-                            <p class="outlined">Projectile Radius</p>
+                            <p class="outlined">Projectile Size</p>
                             <input type="range" min="0.1" max="1" step="0.05" value="0.25" id="radius-input">
                         </div>
+                        <div id="projectile-type-wrapper" class="game-hud-element">
+                            <p class="outlined">Projectile Type</p>
+                            <select id="projectile-type-input">
+                                <option value="circle">Circle</option>
+                                <option value="square">Square</option>
+                            </select>
+                        </div>   
                         <div id="fire-button-wrapper" class="game-hud-element">
-                            <button id="fire-button">FIRE!</button>
+                            <button id="fire-button" class="game-button">FIRE!</button>
                         </div>
                     </div>
                     <div class="game-hud-column" style="position:relative; left: 5vw;">
@@ -38,8 +45,30 @@
                         </div>
                         <div id="angle-wrapper" class="game-hud-element">
                             <p class="outlined">Cannon Angle</p>
-                            <input type="number" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
+                            <input type="range" min="0" max="90" value="45" name="cannon-angle" id="angle-input">
                         </div>
+                        <div class="game-hud-element">
+                            <p class="outlined">Cannon Barrel Length</p>
+                            <input type="range" min="2" max="6" step="0.1" value="4" id="length-input">
+                        </div>
+                        <div class="game-hud-element" style="position:relative; top:1vh;">
+                            <button id="clear-button" class="game-button">RESET</button>
+                        </div>
+                    </div>
+                   
+                    
+                    <div class="game-hud-column" style="position:relative; left: 15vw;">
+                        <div class="game-hud-element">
+                            <p class="outlined">Surface Bounce Amount</p>
+                            <input type="range" min="0.19" max="0.21" step="0.001" value="0.2" id="bounce-input">
+                        </div>
+                        <div id="level-wrapper" class="game-hud-element">
+                            <p class="outlined">Current Level</p>
+                            <select id="level-input">
+                                <option value="0">Level 1</option>
+                                <option value="1">Level 2</option>
+                            </select>
+                        </div>   
                     </div>
 
                 </div>
