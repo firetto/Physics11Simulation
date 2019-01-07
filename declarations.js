@@ -21,7 +21,7 @@ exports.projectile_mass = 0.2;
 exports.projectile_radius = PIXELS_PER_METER / 3;
 exports.projectile_velocity = 8;
 exports.current_level = 0;
-exports.level_count = 2;
+exports.level_count = 4;
 
 exports.surface_proj = new p2.Material();
 exports.surface_ground = new p2.Material();
