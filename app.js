@@ -68,7 +68,7 @@ document.getElementById("length-input").oninput = function() {
 }
 
 document.getElementById("projectile-type-input").oninput = function() {
-    declarations.projectileType = this.value;
+    declarations.projectileShape = this.value;
 }
 document.getElementById("clear-button").onclick = function() {
     reset();

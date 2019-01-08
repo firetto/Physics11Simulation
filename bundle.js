@@ -69,7 +69,7 @@ document.getElementById("length-input").oninput = function() {
 }
 
 document.getElementById("projectile-type-input").oninput = function() {
-    declarations.projectileType = this.value;
+    declarations.projectileShape = this.value;
 }
 document.getElementById("clear-button").onclick = function() {
     reset();
@@ -150,7 +150,9 @@ application.ticker.add(function() {
                 lastPosition = object.objects[object.objects.length - 1].position;
                 document.getElementById('last-projectile-distance').innerHTML = lastPosition[0];
                 document.getElementById('last-projectile-distance-wrapper').style.left = lastPosition[0] + "px";
-                object.objects[object.objects.length - 1].touched = true;
+                if(object.objects[object.objects.length-1].projectileType === "cannon_object") {
+                    object.objects[object.objects.length - 1].touched = true;
+                }
             }
         });
     }
@@ -195,7 +197,7 @@ exports.Cannon = class {
             x: this.velocity*declarations.PIXELS_PER_METER*Math.cos(this.angle),
             y: this.velocity*declarations.PIXELS_PER_METER*Math.sin(this.angle)
         }
-        object.objects.push(new object.Object({x: declarations.projectile_radius, y: declarations.projectile_radius}, declarations.projectile_mass*declarations.projectile_radius, pos, velocity, declarations.projectileType));
+        object.objects.push(new object.Object({x: declarations.projectile_radius, y: declarations.projectile_radius}, declarations.projectile_mass*declarations.projectile_radius, pos, velocity, declarations.projectileShape, "cannon_object"));
         
     }
     setAngle(deg) {
@@ -243,7 +245,8 @@ exports.surface_ground = new p2.Material();
 exports.draggingCannon = false;
 exports.rotatingCannon = false;
 exports.cannonDragPos = [0,0];
-exports.projectileType = "circle";
+exports.projectileShape = "circle";
+exports.projectileType = "map_object"
 },{"p2":41,"pixi.js":201}],4:[function(require,module,exports){
 var PIXI = require('pixi.js');
 var object = require('./object.js');
@@ -1735,21 +1738,21 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 },{}],11:[function(require,module,exports){
 module.exports={
-  "_from": "p2",
+  "_from": "p2@^0.7.1",
   "_id": "p2@0.7.1",
   "_inBundle": false,
   "_integrity": "sha1-JfJHTZvDptMUCh2iamfJ4RislUM=",
   "_location": "/p2",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "p2",
+    "raw": "p2@^0.7.1",
     "name": "p2",
     "escapedName": "p2",
-    "rawSpec": "",
+    "rawSpec": "^0.7.1",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^0.7.1"
   },
   "_requiredBy": [
     "#USER",
@@ -1757,8 +1760,8 @@ module.exports={
   ],
   "_resolved": "https://registry.npmjs.org/p2/-/p2-0.7.1.tgz",
   "_shasum": "25f2474d9bc3a6d3140a1da26a67c9e118ac9543",
-  "_spec": "p2",
-  "_where": "C:\\Users\\azsza\\Documents\\GitHub\\Physics11Simulation",
+  "_spec": "p2@^0.7.1",
+  "_where": "/Users/jonathansumabat/Desktop/Physics11Simulation",
   "author": {
     "name": "Stefan Hedman",
     "email": "schteppe@gmail.com",
@@ -55977,24 +55980,24 @@ var PIXI = require('pixi.js');
 var p2 = require('p2');
 var declarations = require('./declarations.js');
 exports.Object = class extends p2.Body {
-    constructor(_dim, _mass, _position, _velocity, projType) {
+    constructor(_dim, _mass, _position, _velocity, projShape, projType) {
         
         super({
             mass: _mass,
             position: [_position.x, _position.y],
         });
         
+        this.projectileShape = projShape;
         this.projectileType = projType;
         
-        
-        if (this.projectileType === "circle") {
+        if (this.projectileShape === "circle") {
             this.radius = _dim.x;
             this.addShape(new p2.Circle({
                 radius: _dim.x, 
                 material: declarations.surface_proj
             }));
         }
-        else if (this.projectileType === "square") {
+        else if (this.projectileShape === "square") {
             this.dim = _dim;
             this.addShape(new p2.Box({
                 width: _dim.x * 2,
@@ -56015,20 +56018,16 @@ exports.Object = class extends p2.Body {
         this.graphics.clear();
         this.graphics.lineStyle(2,0x000000, 1);
         this.graphics.beginFill(0xa9a9a9);
-        if (this.projectileType === "circle") {
+        if (this.projectileShape === "circle") {
             this.graphics.drawCircle(this.radius, this.radius, this.radius);
             this.graphics.pivot.x = this.radius;
             this.graphics.pivot.y = this.radius;
         }
-        else if (this.projectileType === "square") {
+        else if (this.projectileShape === "square") {
             this.graphics.drawRect(0,0,this.dim.x*2, this.dim.y*2);
             this.graphics.pivot.x = this.dim.x;
             this.graphics.pivot.y = this.dim.y;
         }
-        //
-        
-        
-        
         this.graphics.x = this.position[0];
         this.graphics.y = this.position[1];
         this.graphics.rotation = this.angle;

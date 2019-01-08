@@ -33,7 +33,7 @@ exports.Cannon = class {
             x: this.velocity*declarations.PIXELS_PER_METER*Math.cos(this.angle),
             y: this.velocity*declarations.PIXELS_PER_METER*Math.sin(this.angle)
         }
-        object.objects.push(new object.Object({x: declarations.projectile_radius, y: declarations.projectile_radius}, declarations.projectile_mass*declarations.projectile_radius, pos, velocity, declarations.projectileType, "cannon_object"));
+        object.objects.push(new object.Object({x: declarations.projectile_radius, y: declarations.projectile_radius}, declarations.projectile_mass*declarations.projectile_radius, pos, velocity, declarations.projectileShape, "cannon_object"));
         
     }
     setAngle(deg) {
