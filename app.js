@@ -149,7 +149,9 @@ application.ticker.add(function() {
                 lastPosition = object.objects[object.objects.length - 1].position;
                 document.getElementById('last-projectile-distance').innerHTML = lastPosition[0];
                 document.getElementById('last-projectile-distance-wrapper').style.left = lastPosition[0] + "px";
-                object.objects[object.objects.length - 1].touched = true;
+                if(object.objects[object.objects.length-1] != "map_object") {
+                    object.objects[object.objects.length - 1].touched = true;
+                }
             }
         });
     }

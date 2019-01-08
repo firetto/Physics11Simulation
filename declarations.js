@@ -28,4 +28,5 @@ exports.surface_ground = new p2.Material();
 exports.draggingCannon = false;
 exports.rotatingCannon = false;
 exports.cannonDragPos = [0,0];
-exports.projectileType = "circle";
+exports.projectileShape = "circle";
+exports.projectileType = "map_object"
