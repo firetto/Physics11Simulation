@@ -67,7 +67,7 @@ document.getElementById("length-input").oninput = function() {
     cann.setLength(this.value);
 }
 
-document.getElementById("projectile-type-input").oninput = function() {
+document.getElementById("projectile-shape-input").oninput = function() {
     declarations.projectileShape = this.value;
 }
 document.getElementById("clear-button").onclick = function() {
