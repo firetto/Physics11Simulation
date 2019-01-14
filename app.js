@@ -149,6 +149,7 @@ application.ticker.add(function() {
                 lastPosition = object.objects[object.objects.length - 1].position;
                 document.getElementById('last-projectile-distance').innerHTML = lastPosition[0];
                 document.getElementById('last-projectile-distance-wrapper').style.left = lastPosition[0] + "px";
+                // set an object as touched only if it is a cannon_object
                 if(object.objects[object.objects.length-1].projectileType === "cannon_object") {
                     object.objects[object.objects.length - 1].touched = true;
                 }
