@@ -119,7 +119,17 @@ world.addContactMaterial(new p2.ContactMaterial(declarations.surface_proj, decla
 world.addContactMaterial(new p2.ContactMaterial(declarations.surface_proj, declarations.surface_proj, {
     friction: 10
 }));
+var mapobjcontact=new p2.ContactMaterial(declarations.surface_mapObj, declarations.surface_mapObj, {
+    stiffness: 1000000000
+});
+mapobjcontact.contactSkinSize=0;
+world.addContactMaterial(mapobjcontact);
 
+var groundmapobjcontact=new p2.ContactMaterial(declarations.surface_mapObj, declarations.surface_ground, {
+    stiffness: 1000000000
+});
+groundmapobjcontact.contactSkinSize=0.005;
+world.addContactMaterial(groundmapobjcontact);
 document.getElementById("bounce-input").oninput = function() {
     world.contactMaterials[0].restitution = this.value;
     console.log(world.contactMaterials[0].restitution);
@@ -146,14 +156,12 @@ application.ticker.add(function() {
     if (object.objects.length > 0) {
         document.getElementById("clear-button").style.display="block";
         object.objects[object.objects.length - 1].world.on('beginContact', function () {
-            if (!object.objects[object.objects.length - 1].touched) {
+            if (!object.objects[object.objects.length - 1].touched && object.objects[object.objects.length-1].projectileType === "cannon_object") {
                 lastPosition = object.objects[object.objects.length - 1].position;
                 document.getElementById('last-projectile-distance').innerHTML = lastPosition[0];
                 document.getElementById('last-projectile-distance-wrapper').style.left = lastPosition[0] + "px";
                 // set an object as touched only if it is a cannon_object
-                if(object.objects[object.objects.length-1].projectileType === "cannon_object") {
-                    object.objects[object.objects.length - 1].touched = true;
-                }
+                object.objects[object.objects.length - 1].touched = true;
             }
         });
     }
@@ -243,11 +251,12 @@ exports.level_count = 4;
 
 exports.surface_proj = new p2.Material();
 exports.surface_ground = new p2.Material();
+exports.surface_mapObj = new p2.Material();
 exports.draggingCannon = false;
 exports.rotatingCannon = false;
 exports.cannonDragPos = [0,0];
 exports.projectileShape = "circle";
-exports.projectileType = "map_object"
+exports.projectileType = "map_object";
 },{"p2":41,"pixi.js":201}],4:[function(require,module,exports){
 var PIXI = require('pixi.js');
 var object = require('./object.js');
@@ -259,7 +268,8 @@ function addCircle(rad, mas, pos, typ) {
         mas,
         pos,
         {x:0,y:0},
-        typ
+        "cicle",
+        "map_object"
     ));
 }
 function addRect(dim, mas, pos, typ) {
@@ -268,7 +278,8 @@ function addRect(dim, mas, pos, typ) {
         mas,
         pos,
         {x:0,y:0},
-        typ
+        "square",
+        "map_object"
     ));
 }
 
@@ -276,29 +287,30 @@ function loadLevels() {
     switch (declarations.current_level) {
         case 0:
         for (var i = 0; i < 7; i++) {
-            addRect({x:25, y:25}, 5, {x: 1000, y: 25+100*i}, "square", declarations.projectileType);
-            addRect({x:25, y:25}, 5, {x: 1200, y: 25+100*i}, "square", declarations.projectileType);
-            addRect({x:200, y:25}, 5, {x: 1100, y: 75+100*i}, "square", declarations.projectileType);
+            addRect({x:25, y:25}, 5, {x: 1000, y: 25+100*i});
+            addRect({x:25, y:25}, 5, {x: 1200, y: 25+100*i});
+            addRect({x:200, y:25}, 5, {x: 1100, y: 75+100*i});
         }
         break;
 
         case 1:
         for (var i = 0; i < 10; i++) {
             for (var a = 0; a < 4; a++) {
-                addRect({x:30, y:30}, 50-i*4, {x: 900+a*60, y: 30+i*60}, "square", declarations.projectileType);
+                addRect({x:30, y:30}, 50-i*4, {x: 900+a*60, y: 30+i*60});
             }
         }
-        addRect({x: 120, y: 30}, 50, {x:1000, y:700}, "square", declarations.projectileType);
+        addRect({x: 120, y: 30}, 50, {x:1000, y:700});
         break;
         
         case 2:
-        addRect({x:25, y: 50}, 5, {x: 900, y: 50}, "square", declarations.projectileType);
-        addRect({x:25, y:50}, 5, {x: 1100, y:50}, "square", declarations.projectileType);
-        addRect({x:250, y: 25}, 5, {x: 1000, y: 125}, "square", declarations.projectileType);
-        addRect({x:25, y: 50}, 5, {x: 850, y: 200}, "square", declarations.projectileType);
-        addRect({x:25, y: 50}, 5, {x: 1150, y: 200}, "square", declarations.projectileType);
-        addRect({x:250, y: 25}, 5, {x: 1000, y: 275}, "square", declarations.projectileType);
-        addRect({x: 50, y: 200}, 50, {x: 1000, y: 500}, "square", declarations.projectileType);
+        addRect({x:25, y: 50}, 5, {x: 900, y: 50});
+        addRect({x:25, y:50}, 5, {x: 1100, y:50});
+        addRect({x:250, y: 25}, 5, {x: 1000, y: 125});
+        addRect({x:25, y: 50}, 5, {x: 850, y: 200});
+        addRect({x:25, y: 50}, 5, {x: 1150, y: 200});
+        addRect({x:250, y: 25}, 5, {x: 1000, y: 275});
+        addRect({x: 50, y: 200}, 50, {x: 1000, y: 500});
+
         break;
     }   
 }
@@ -1739,21 +1751,21 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 },{}],11:[function(require,module,exports){
 module.exports={
-  "_from": "p2@^0.7.1",
+  "_from": "p2",
   "_id": "p2@0.7.1",
   "_inBundle": false,
   "_integrity": "sha1-JfJHTZvDptMUCh2iamfJ4RislUM=",
   "_location": "/p2",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "tag",
     "registry": true,
-    "raw": "p2@^0.7.1",
+    "raw": "p2",
     "name": "p2",
     "escapedName": "p2",
-    "rawSpec": "^0.7.1",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "^0.7.1"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
     "#USER",
@@ -1761,8 +1773,8 @@ module.exports={
   ],
   "_resolved": "https://registry.npmjs.org/p2/-/p2-0.7.1.tgz",
   "_shasum": "25f2474d9bc3a6d3140a1da26a67c9e118ac9543",
-  "_spec": "p2@^0.7.1",
-  "_where": "/Users/jonathansumabat/Desktop/Physics11Simulation",
+  "_spec": "p2",
+  "_where": "C:\\Users\\azsza\\Documents\\GitHub\\Physics11Simulation",
   "author": {
     "name": "Stefan Hedman",
     "email": "schteppe@gmail.com",
@@ -55990,12 +56002,12 @@ exports.Object = class extends p2.Body {
         
         this.projectileShape = projShape;
         this.projectileType = projType;
-        
+        if (projType==="map_object") console.log("Map object!");
         if (this.projectileShape === "circle") {
             this.radius = _dim.x;
             this.addShape(new p2.Circle({
                 radius: _dim.x, 
-                material: declarations.surface_proj
+                material: ((this.projectileType==="map_object") ? declarations.surface_mapObj : declarations.surface_proj)
             }));
         }
         else if (this.projectileShape === "square") {
@@ -56003,22 +56015,23 @@ exports.Object = class extends p2.Body {
             this.addShape(new p2.Box({
                 width: _dim.x * 2,
                 height: _dim.y * 2,
-                material: declarations.surface_proj
+                material: ((this.projectileType==="map_object") ? declarations.surface_mapObj : declarations.surface_proj)
             }));
         }
-        
+        if (this.shapes[0].material===declarations.surface_mapObj) console.log("right object");
         declarations.world.addBody(this);
         this.graphics = new PIXI.Graphics();
         declarations.application.stage.addChild(this.graphics);
         this.damping = 0;
-        this.shapes[0].material = declarations.surface_proj;
         this.velocity = [_velocity.x, _velocity.y];
         this.touched = false;
     }
     draw() {
         this.graphics.clear();
         this.graphics.lineStyle(2,0x000000, 1);
-        this.graphics.beginFill(0xa9a9a9);
+        if (this.projectileType === "cannon_object") this.graphics.beginFill(0x505050);
+        else this.graphics.beginFill(0xa9a9a9);
+        
         if (this.projectileShape === "circle") {
             this.graphics.drawCircle(this.radius, this.radius, this.radius);
             this.graphics.pivot.x = this.radius;

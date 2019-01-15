@@ -25,8 +25,9 @@ exports.level_count = 4;
 
 exports.surface_proj = new p2.Material();
 exports.surface_ground = new p2.Material();
+exports.surface_mapObj = new p2.Material();
 exports.draggingCannon = false;
 exports.rotatingCannon = false;
 exports.cannonDragPos = [0,0];
 exports.projectileShape = "circle";
-exports.projectileType = "map_object"
+exports.projectileType = "map_object";

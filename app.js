@@ -118,7 +118,17 @@ world.addContactMaterial(new p2.ContactMaterial(declarations.surface_proj, decla
 world.addContactMaterial(new p2.ContactMaterial(declarations.surface_proj, declarations.surface_proj, {
     friction: 10
 }));
+var mapobjcontact=new p2.ContactMaterial(declarations.surface_mapObj, declarations.surface_mapObj, {
+    stiffness: 1000000000
+});
+mapobjcontact.contactSkinSize=0;
+world.addContactMaterial(mapobjcontact);
 
+var groundmapobjcontact=new p2.ContactMaterial(declarations.surface_mapObj, declarations.surface_ground, {
+    stiffness: 1000000000
+});
+groundmapobjcontact.contactSkinSize=0.005;
+world.addContactMaterial(groundmapobjcontact);
 document.getElementById("bounce-input").oninput = function() {
     world.contactMaterials[0].restitution = this.value;
     console.log(world.contactMaterials[0].restitution);
@@ -145,14 +155,12 @@ application.ticker.add(function() {
     if (object.objects.length > 0) {
         document.getElementById("clear-button").style.display="block";
         object.objects[object.objects.length - 1].world.on('beginContact', function () {
-            if (!object.objects[object.objects.length - 1].touched) {
+            if (!object.objects[object.objects.length - 1].touched && object.objects[object.objects.length-1].projectileType === "cannon_object") {
                 lastPosition = object.objects[object.objects.length - 1].position;
                 document.getElementById('last-projectile-distance').innerHTML = lastPosition[0];
                 document.getElementById('last-projectile-distance-wrapper').style.left = lastPosition[0] + "px";
                 // set an object as touched only if it is a cannon_object
-                if(object.objects[object.objects.length-1].projectileType === "cannon_object") {
-                    object.objects[object.objects.length - 1].touched = true;
-                }
+                object.objects[object.objects.length - 1].touched = true;
             }
         });
     }
