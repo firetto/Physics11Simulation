@@ -9,30 +9,31 @@ exports.Cannon = class {
         application.stage.addChild(this.graphics);
         this.angle = 0;
         this.height = 0;
-        this.velocity = 10;
-        this.barrelThickness = 40;
-        this.barrelLength = 200;
+        this.velocity = declarations.projectile_velocity;
+        this.barrelThickness = 0.8;
+        this.barrelLength = 4;
         this.graphics.x = 20;
-        this.graphics.y = application.renderer.height - this.height - this.barrelThickness - 5;
+        this.setHeight(0);
     }
     draw() {
+        this.graphics.clear();
         this.graphics.lineStyle(3, 0x000000, 1);
         this.graphics.beginFill(0x303030);
-        this.graphics.drawRoundedRect(0,0, this.barrelLength, this.barrelThickness, 3);
+        this.graphics.drawRoundedRect(0,0, this.barrelLength*declarations.PIXELS_PER_METER, this.barrelThickness*declarations.PIXELS_PER_METER, 3);
 
         this.graphics.pivot.y = this.barrelThickness / 2;
         this.graphics.rotation = this.angle;
     }
     fire() {
         let pos = {
-            x: this.graphics.x + this.barrelLength*Math.cos(this.angle), 
-            y: this.graphics.y + this.barrelLength*Math.sin(this.angle)
+            x: this.graphics.x + this.barrelLength*declarations.PIXELS_PER_METER*Math.cos(this.angle), 
+            y: this.graphics.y + this.barrelLength*declarations.PIXELS_PER_METER*Math.sin(this.angle)
         }
         let velocity = {
-            x: this.velocity*Math.cos(this.angle),
-            y: this.velocity*Math.sin(this.angle)
+            x: this.velocity*declarations.PIXELS_PER_METER*Math.cos(this.angle),
+            y: this.velocity*declarations.PIXELS_PER_METER*Math.sin(this.angle)
         }
-        object.objects.push(new object.Object(2, pos, velocity));
+        object.objects.push(new object.Object({x: declarations.projectile_radius, y: declarations.projectile_radius}, declarations.projectile_mass*declarations.projectile_radius, pos, velocity, declarations.projectileType));
         
     }
     setAngle(deg) {
@@ -40,5 +41,12 @@ exports.Cannon = class {
     }
     setVelocity(vel) {
         this.velocity = vel;
+    }
+    setHeight(height) {
+        this.height = height*declarations.PIXELS_PER_METER;
+        this.graphics.y = this.height;
+    }
+    setLength(length) {
+        this.barrelLength = length;
     }
 }
