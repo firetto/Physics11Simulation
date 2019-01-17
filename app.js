@@ -138,6 +138,14 @@ window.addEventListener("resize", function(event) {
     application.renderer.resize(window.innerWidth, window.innerHeight); 
     wallBody.position[0] = application.renderer.width;
 }); 
+
+world.islandSplit = true;
+world.sleepMode = p2.World.ISLAND_SLEEPING;
+
+world.solver.iterations = 20;
+world.solver.tolerance = 0.001;
+world.setGlobalStiffness(1e4);
+
 var startTime = Date.now();
 var endTime, timeDiff;
 var timeStep = 1/60, maxSubSteps = 10, lastTime;

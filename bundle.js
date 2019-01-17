@@ -139,6 +139,14 @@ window.addEventListener("resize", function(event) {
     application.renderer.resize(window.innerWidth, window.innerHeight); 
     wallBody.position[0] = application.renderer.width;
 }); 
+
+world.islandSplit = true;
+world.sleepMode = p2.World.ISLAND_SLEEPING;
+
+world.solver.iterations = 20;
+world.solver.tolerance = 0.001;
+world.setGlobalStiffness(1e4);
+
 var startTime = Date.now();
 var endTime, timeDiff;
 var timeStep = 1/60, maxSubSteps = 10, lastTime;
@@ -1751,21 +1759,21 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 },{}],11:[function(require,module,exports){
 module.exports={
-  "_from": "p2",
+  "_from": "p2@^0.7.1",
   "_id": "p2@0.7.1",
   "_inBundle": false,
   "_integrity": "sha1-JfJHTZvDptMUCh2iamfJ4RislUM=",
   "_location": "/p2",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "p2",
+    "raw": "p2@^0.7.1",
     "name": "p2",
     "escapedName": "p2",
-    "rawSpec": "",
+    "rawSpec": "^0.7.1",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^0.7.1"
   },
   "_requiredBy": [
     "#USER",
@@ -1773,8 +1781,8 @@ module.exports={
   ],
   "_resolved": "https://registry.npmjs.org/p2/-/p2-0.7.1.tgz",
   "_shasum": "25f2474d9bc3a6d3140a1da26a67c9e118ac9543",
-  "_spec": "p2",
-  "_where": "C:\\Users\\azsza\\Documents\\GitHub\\Physics11Simulation",
+  "_spec": "p2@^0.7.1",
+  "_where": "/Users/jonathansumabat/Desktop/Physics11Simulation",
   "author": {
     "name": "Stefan Hedman",
     "email": "schteppe@gmail.com",
